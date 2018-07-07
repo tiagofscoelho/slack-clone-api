@@ -3,7 +3,9 @@ import {
   Get,
   Post,
   Body,
-  UsePipes } from '@nestjs/common'
+  UsePipes,
+  UseGuards } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
 
 import { RoomService } from './room.service'
@@ -16,11 +18,13 @@ export class RoomController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateRoomJoi))
+  @UseGuards(AuthGuard('jwt'))
   async create(@Body() body: CreateRoomDto) {
     return await this.roomService.create(body)
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   async findAll() {
     return await this.roomService.findAll()
   }

@@ -7,7 +7,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
-    "start:dev": "nodemon",
+    "dev": "nodemon",
     "prestart:prod": "rm -rf dist && tsc",
     "start:prod": "node dist/main.js",
     "start:hmr": "node dist/server",
@@ -26,7 +26,6 @@
     "joi": "^13.4.0",
     "jsonwebtoken": "^8.3.0",
     "passport": "^0.4.0",
-    "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.0",
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
