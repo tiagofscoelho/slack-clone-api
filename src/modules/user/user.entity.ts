@@ -7,25 +7,30 @@ import {
 } from 'typeorm'
 
 @Entity()
-export class Room {
+export class User {
   @PrimaryGeneratedColumn()
   id: number
 
   @Column({
     length: 64
   })
-  name: string
+  firstName: string
 
   @Column({
-    length: 255,
+    length: 64,
     nullable: true
   })
-  purpose: string
+  lastName: string
 
   @Column({
-    default: true
+    length: 128
   })
-  private: boolean
+  email: string
+
+  @Column({
+    length: 128
+  })
+  password: string
 
   @CreateDateColumn({
     type: 'timestamp'

@@ -18,7 +18,7 @@ export class RoomService {
     newRoom.private = room.private
     newRoom.purpose = room.purpose
 
-    return await this.roomRepository.save(room)
+    return await this.roomRepository.save(newRoom)
   }
 
   async findAll(): Promise<Room[]> {
