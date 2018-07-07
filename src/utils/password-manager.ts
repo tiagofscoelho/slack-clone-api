@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt'
 
-export class PasswordEncrypt {
+export class PasswordManager {
   constructor() {}
 
   async generatePasswordHash(password: string): Promise<string> {
@@ -10,5 +10,9 @@ export class PasswordEncrypt {
     } catch (error) {
       throw error
     }
+  }
+
+  async validatePassword(password: string, hash: string): Promise<string> {
+    return await bcrypt.compare(password, hash)
   }
 }

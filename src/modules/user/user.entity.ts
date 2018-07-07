@@ -23,7 +23,8 @@ export class User {
   lastName: string
 
   @Column({
-    length: 128
+    length: 128,
+    unique: true
   })
   email: string
 
