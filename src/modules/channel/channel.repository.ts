@@ -12,6 +12,8 @@ export class ChannelRepository extends Repository<Channel> {
     channel.purpose = data.purpose
     channel.private = data.private
     channel.createdBy = user
+    channel.users = [user]
+
     return this.save(channel)
   }
 }

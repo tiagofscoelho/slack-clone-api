@@ -5,7 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToMany,
+  JoinTable
 } from 'typeorm'
 
 import { User } from 'modules/user/user.entity'
@@ -34,6 +36,10 @@ export class Channel {
   @ManyToOne(type => User, user => user.createdChannels)
   @JoinColumn({ name: 'createdBy' })
   createdBy: User
+
+  @ManyToMany(type => User)
+  @JoinTable({ name: 'channel_users'})
+  users: User[]
 
   @CreateDateColumn({
     type: 'timestamp'
