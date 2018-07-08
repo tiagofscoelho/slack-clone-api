@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 
 @Entity()
-export class Room {
+export class Channel {
   @PrimaryGeneratedColumn()
   id: number
 
