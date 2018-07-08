@@ -23,7 +23,12 @@ module.exports = {
   },
   mode: "development",
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      modules: path.resolve(__dirname, 'modules/'),
+      pipes: path.resolve(__dirname, 'pipes/'),
+      utils: path.resolve(__dirname, 'utils/')
+    }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

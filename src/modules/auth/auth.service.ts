@@ -5,25 +5,20 @@ import constants from 'utils/constants'
 
 @Injectable()
 export class AuthService {
-  // constructor(private readonly usersService: UsersService) {}
-
-  async createToken(email: string) {
+  createToken(email: string): object {
     const user: JwtPayload = { email }
     const jwtOptions = { expiresIn: constants.auth.JWT_EXPIRATION }
-
     const accessToken = jwt.sign(
       user,
       process.env.AUTH_USER_JWT_SECRET,
       jwtOptions)
 
-    return {
-      expiresIn: jwtOptions.expiresIn,
-      accessToken
-    }
+    return accessToken
   }
 
-  async validateUser(payload: JwtPayload): Promise<any> {
-    // TODO: after add User module
-    return false
+  validateUser({ email }: JwtPayload): object {
+    return {
+      email
+    }
   }
 }

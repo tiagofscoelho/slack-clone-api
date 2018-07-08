@@ -4,15 +4,19 @@ import {
   Post,
   Body,
   UsePipes,
-  UseGuards } from '@nestjs/common'
+  UseGuards,
+  Req,
+  UseInterceptors } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
 
 import { RoomService } from './room.service'
 import { CreateRoomDto } from './schemas/room.dto'
 import { CreateRoomJoi } from './schemas/room.joi'
+import { JwtInterceptor } from 'modules/auth/jwt.interceptor'
 
 @Controller('room')
+@UseInterceptors(JwtInterceptor)
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
@@ -25,7 +29,7 @@ export class RoomController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findAll() {
+  async findAll(@Req() req) {
     return await this.roomService.findAll()
   }
 }
