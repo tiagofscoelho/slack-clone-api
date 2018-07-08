@@ -27,6 +27,13 @@ import { RegisterUserJoi, LoginUserJoi } from './schemas/user.joi'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async getUser(@Req() req) {
+    const user = await this.userService.getByEmail(req.user.email)
+    return this.userService.removeUnecessaryKeysFromUser(user)
+  }
+
   @Post()
   @UsePipes(new JoiValidationPipe(RegisterUserJoi))
   @UseInterceptors(JwtInterceptor)

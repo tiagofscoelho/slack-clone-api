@@ -53,7 +53,7 @@ export class UserService {
     }
   }
 
-  async get(email: string): Promise<UserInterface> {
+  async getByEmail(email: string): Promise<UserInterface> {
     return await this.userRepository.findByEmail(email)
   }
 
