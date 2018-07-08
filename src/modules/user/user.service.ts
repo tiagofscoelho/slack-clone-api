@@ -35,7 +35,11 @@ export class UserService {
 
   async login(data: UserInterface): Promise<UserInterface> {
     try {
-      const user = await this.userRepository.findOne({ email: data.email })
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where('user.email = :email', { email: data.email })
+        .getOne()
 
       if (user) {
         const isPasswordValid = await this.passwordManager.validatePassword(data.password, user.password)

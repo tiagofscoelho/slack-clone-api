@@ -6,6 +6,8 @@ import { Channel } from './channel.entity'
 import { ChannelInterface } from './schemas/channel.interface'
 import { ChannelRepository } from './channel.repository'
 import { UserInterface } from 'modules/user/schemas/user.interface'
+import { throwError } from 'rxjs'
+import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
 @Injectable()
 export class ChannelService {
@@ -23,5 +25,17 @@ export class ChannelService {
 
   async findAll(req): Promise<Channel[]> {
     return await this.channelRepository.find({ createdBy: req.user.id })
+  }
+
+  async findOne(id): Promise<Channel> {
+    const channel = await this.channelRepository.findOne({ id }, {
+      relations: ['createdBy', 'users']
+    })
+
+    if (channel) {
+      return channel
+    } else {
+      throw new Error(HttpErrorCode.NOT_FOUND)
+    }
   }
 }

@@ -32,7 +32,8 @@ export class User {
   email: string
 
   @Column({
-  length: 128
+    length: 128,
+    select: false
   })
   password: string
 
