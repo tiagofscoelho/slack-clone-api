@@ -18,7 +18,6 @@ import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
 import { HttpExceptionCode } from 'utils/http-exception-code.utils'
 import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
-import { AuthService } from 'modules/auth/auth.service'
 import { JwtInterceptor } from 'modules/auth/jwt.interceptor'
 import { UserService } from './user.service'
 import { UserInterface } from './schemas/user.interface'
@@ -26,10 +25,7 @@ import { RegisterUserJoi, LoginUserJoi } from './schemas/user.joi'
 
 @Controller('user')
 export class UserController {
-  private authService
-  constructor(private readonly userService: UserService) {
-    this.authService = new AuthService()
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @UsePipes(new JoiValidationPipe(RegisterUserJoi))

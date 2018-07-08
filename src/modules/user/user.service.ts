@@ -5,7 +5,7 @@ import { UserRepository } from './user.repository'
 import { User } from './user.entity'
 import { UserInterface } from './schemas/user.interface'
 import { PasswordManager } from 'utils/password-manager'
-import constants from 'utils/constants'
+import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
       return await this.userRepository.createAndSave(data)
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
-        throw new Error(constants.codes.ALREADY_EXISTS)
+        throw new Error(HttpErrorCode.ALREADY_EXISTS)
       } else {
         throw error
       }
@@ -43,10 +43,10 @@ export class UserService {
         if (isPasswordValid) {
           return user
         } else {
-          throw new Error(constants.codes.INVALID_CREDENTIALS)
+          throw new Error(HttpErrorCode.INVALID_CREDENTIALS)
         }
       } else {
-        throw new Error(constants.codes.NOT_FOUND)
+        throw new Error(HttpErrorCode.NOT_FOUND)
       }
     } catch (error) {
       throw error

@@ -6,7 +6,7 @@ import {
   HttpStatus
 } from '@nestjs/common'
 import { HttpExceptionCode } from 'utils/http-exception-code.utils'
-import constants from 'utils/constants'
+import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
 @Injectable()
 export class JoiValidationPipe implements PipeTransform {
@@ -17,7 +17,7 @@ export class JoiValidationPipe implements PipeTransform {
     if (error) {
       throw new HttpExceptionCode(
         HttpStatus.BAD_REQUEST,
-        constants.codes.VALIDATION_FAILED,
+        HttpErrorCode.VALIDATION_FAILED,
         error)
     }
 
