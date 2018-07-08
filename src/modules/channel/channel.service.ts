@@ -1,24 +1,23 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { getCustomRepository } from 'typeorm'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Channel } from './channel.entity'
-import { CreateChannelDto } from './schemas/channel.dto'
+import { ChannelInterface } from './schemas/channel.interface'
+import { ChannelRepository } from './channel.repository'
 
 @Injectable()
 export class ChannelService {
 
   constructor(
     @InjectRepository(Channel)
-    private readonly channelRepository: Repository<Channel>
-  ) {}
+    private readonly channelRepository
+  ) {
+    this.channelRepository = getCustomRepository(ChannelRepository)
+  }
 
-  async create(channel: CreateChannelDto) {
-    const newChannel = new Channel()
-    newChannel.name = channel.name
-    newChannel.private = channel.private
-    newChannel.purpose = channel.purpose
-
-    return await this.channelRepository.save(newChannel)
+  async create(channel: ChannelInterface) {
+    return await this.channelRepository.createAndSave(channel)
   }
 
   async findAll(): Promise<Channel[]> {

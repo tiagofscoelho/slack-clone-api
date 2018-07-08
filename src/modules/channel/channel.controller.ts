@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
 
 import { ChannelService } from './channel.service'
-import { CreateChannelDto } from './schemas/channel.dto'
+import { ChannelInterface } from './schemas/channel.interface'
 import { CreateChannelJoi } from './schemas/channel.joi'
 import { JwtInterceptor } from 'modules/auth/jwt.interceptor'
 
@@ -23,7 +23,7 @@ export class ChannelController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new JoiValidationPipe(CreateChannelJoi))
-  async create(@Body() body: CreateChannelDto) {
+  async create(@Body() body: ChannelInterface) {
     return await this.channelService.create(body)
   }
 

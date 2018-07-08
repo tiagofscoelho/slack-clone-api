@@ -1,4 +1,4 @@
-import {getCustomRepository} from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import { Injectable, Inject } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserRepository } from './user.repository'
