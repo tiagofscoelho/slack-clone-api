@@ -10,6 +10,9 @@ One of the things that might sound wierd is the fact that I am using classes to 
 Thats because Nest's documentation says that:
 > "_What may be surprising, we recommend using classes here. [Instead of interfaces] Why? Classes are part of the JavaScript ES6 standard, and therefore they represent just plain functions. On the other hand, TypeScript interfaces are removed during the transpilation, Nest can't refer to them. It's important because features such as Pipes enable additional possibilities when they have access to the metatype of the variable._"
 
+## API documentation
+API documentation so far can be found [here](https://documenter.getpostman.com/view/1230851/RWM9uVSw#0b3aa0ad-0688-45e0-8f61-5d2518f98e4b).
+
 ## Features
 Below is listed the features that I am aiming to support with the API.
 
