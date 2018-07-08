@@ -3,8 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm'
+
+import { Channel } from 'modules/channel/channel.entity'
 
 @Entity()
 export class User {
@@ -29,9 +32,12 @@ export class User {
   email: string
 
   @Column({
-    length: 128
+  length: 128
   })
   password: string
+
+  @OneToMany(type => Channel, channel => channel.createdBy)
+  createdChannels: Channel[]
 
   @CreateDateColumn({
     type: 'timestamp'

@@ -23,13 +23,13 @@ export class ChannelController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new JoiValidationPipe(CreateChannelJoi))
-  async create(@Body() body: ChannelInterface) {
-    return await this.channelService.create(body)
+  async create(@Body() body: ChannelInterface, @Req() req) {
+    return await this.channelService.create(body, req.user)
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Req() req) {
-    return await this.channelService.findAll()
+    return await this.channelService.findAll(req)
   }
 }

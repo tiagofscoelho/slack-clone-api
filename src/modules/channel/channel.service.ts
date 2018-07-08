@@ -5,6 +5,7 @@ import { Repository } from 'typeorm'
 import { Channel } from './channel.entity'
 import { ChannelInterface } from './schemas/channel.interface'
 import { ChannelRepository } from './channel.repository'
+import { UserInterface } from 'modules/user/schemas/user.interface'
 
 @Injectable()
 export class ChannelService {
@@ -16,11 +17,11 @@ export class ChannelService {
     this.channelRepository = getCustomRepository(ChannelRepository)
   }
 
-  async create(channel: ChannelInterface) {
-    return await this.channelRepository.createAndSave(channel)
+  async create(channel: ChannelInterface, user: UserInterface) {
+    return await this.channelRepository.createAndSave(channel, user)
   }
 
-  async findAll(): Promise<Channel[]> {
-    return await this.channelRepository.find()
+  async findAll(req): Promise<Channel[]> {
+    return await this.channelRepository.find({ createdBy: req.user.id })
   }
 }

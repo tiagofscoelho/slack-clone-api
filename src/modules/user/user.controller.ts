@@ -34,7 +34,7 @@ export class UserController {
     try {
       const user = await this.userService.register(body)
       req.user = user
-      return this.removeUnecessaryKeysFromUser(user)
+      return this.userService.removeUnecessaryKeysFromUser(user)
     } catch (error) {
 
       switch (error.message) {
@@ -59,7 +59,7 @@ export class UserController {
     try {
       const user = await this.userService.login(body)
       req.user = user
-      return this.removeUnecessaryKeysFromUser(user)
+      return this.userService.removeUnecessaryKeysFromUser(user)
     } catch (error) {
       switch (error.message) {
         case HttpErrorCode.NOT_FOUND:
@@ -80,15 +80,5 @@ export class UserController {
           throw new InternalServerErrorException()
       }
     }
-  }
-
-  removeUnecessaryKeysFromUser = user => {
-    const {
-      password,
-      createdAt,
-      updatedAt,
-      ...cleanUser } = user
-
-    return cleanUser
   }
 }

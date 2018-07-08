@@ -3,8 +3,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn
 } from 'typeorm'
+
+import { User } from 'modules/user/user.entity'
 
 @Entity()
 export class Channel {
@@ -12,12 +16,12 @@ export class Channel {
   id: number
 
   @Column({
-    length: 64
+    length: 24
   })
   name: string
 
   @Column({
-    length: 255,
+    length: 128,
     nullable: true
   })
   purpose: string
@@ -26,6 +30,10 @@ export class Channel {
     default: true
   })
   private: boolean
+
+  @ManyToOne(type => User, user => user.createdChannels)
+  @JoinColumn({ name: 'createdBy' })
+  createdBy: User
 
   @CreateDateColumn({
     type: 'timestamp'

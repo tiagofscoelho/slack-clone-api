@@ -15,7 +15,7 @@ export class JwtInterceptor implements NestInterceptor {
   ): Observable<any> {
     return call$.pipe(
       tap(() => {
-        const authService = new AuthService()
+        const authService = new AuthService(null)
         const {res, user, ...incomingMessage } = context.getArgByIndex(0)
         res.cookie('access_token', authService.createToken(user.email))
       })

@@ -52,4 +52,18 @@ export class UserService {
       throw error
     }
   }
+
+  async get(email: string): Promise<UserInterface> {
+    return await this.userRepository.findByEmail(email)
+  }
+
+  removeUnecessaryKeysFromUser = user => {
+    const {
+      password,
+      createdAt,
+      updatedAt,
+      ...cleanUser } = user
+
+    return cleanUser
+  }
 }
