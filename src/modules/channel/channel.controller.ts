@@ -9,7 +9,8 @@ import {
   Param,
   UseInterceptors,
   HttpStatus,
-  InternalServerErrorException
+  InternalServerErrorException,
+  Patch
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
@@ -19,7 +20,7 @@ import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
 import { ChannelService } from './channel.service'
 import { ChannelInterface } from './schemas/channel.interface'
-import { CreateChannelJoi } from './schemas/channel.joi'
+import { CreateChannelJoi, UpdateChannelJoi } from './schemas/channel.joi'
 import { JwtInterceptor } from 'modules/auth/jwt.interceptor'
 
 @Controller('channel')
@@ -53,6 +54,34 @@ export class ChannelController {
             HttpErrorCode.NOT_FOUND,
             'User not found')
           break
+
+        default:
+          throw new InternalServerErrorException()
+      }
+    }
+  }
+
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new JoiValidationPipe(UpdateChannelJoi))
+  async update(@Param() params, @Body() body, @Req() req) {
+    try {
+      return await this.channelService.update(params.id, body, req.user)
+    } catch (error) {
+      switch (error.message) {
+        case HttpErrorCode.NOT_FOUND:
+          throw new HttpExceptionCode(
+            HttpStatus.NOT_FOUND,
+            HttpErrorCode.NOT_FOUND,
+            'User not found')
+          break
+
+        case HttpErrorCode.INVALID_PERMISSIONS:
+            throw new HttpExceptionCode(
+              HttpStatus.FORBIDDEN,
+              HttpErrorCode.INVALID_PERMISSIONS,
+              'Invalid permissions for resource')
+            break
 
         default:
           throw new InternalServerErrorException()

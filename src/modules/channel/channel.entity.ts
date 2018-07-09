@@ -7,7 +7,9 @@ import {
   ManyToOne,
   JoinColumn,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  getManager,
+  BeforeUpdate
 } from 'typeorm'
 
 import { User } from 'modules/user/user.entity'
@@ -50,4 +52,10 @@ export class Channel {
     type: 'timestamp'
   })
   updatedAt: Date
+
+  // Hooks
+  @BeforeUpdate()
+  updateDates() {
+    // TODO: guarantee that private is a boolean
+  }
 }
