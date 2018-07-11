@@ -2,15 +2,17 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
+  Delete,
   Body,
   UsePipes,
   UseGuards,
   Req,
   Param,
+  HttpCode,
   UseInterceptors,
   HttpStatus,
   InternalServerErrorException,
-  Patch
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { JoiValidationPipe} from 'pipes/joi-validation.pipe'
@@ -20,7 +22,12 @@ import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
 
 import { ChannelService } from './channel.service'
 import { ChannelInterface } from './schemas/channel.interface'
-import { CreateChannelJoi, UpdateChannelJoi } from './schemas/channel.joi'
+import {
+  CreateChannelJoi,
+  UpdateChannelJoi,
+  DeleteChannelJoi,
+  FavoriteChannelJoi
+} from './schemas/channel.joi'
 import { JwtInterceptor } from 'modules/auth/jwt.interceptor'
 
 @Controller('channel')
@@ -52,7 +59,7 @@ export class ChannelController {
           throw new HttpExceptionCode(
             HttpStatus.NOT_FOUND,
             HttpErrorCode.NOT_FOUND,
-            'User not found')
+            'Channel not found')
           break
 
         default:
@@ -73,7 +80,36 @@ export class ChannelController {
           throw new HttpExceptionCode(
             HttpStatus.NOT_FOUND,
             HttpErrorCode.NOT_FOUND,
-            'User not found')
+            'Channel not found')
+          break
+
+        case HttpErrorCode.INVALID_PERMISSIONS:
+            throw new HttpExceptionCode(
+              HttpStatus.FORBIDDEN,
+              HttpErrorCode.INVALID_PERMISSIONS,
+              'Invalid permissions for resource')
+            break
+
+        default:
+          throw new InternalServerErrorException()
+      }
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new JoiValidationPipe(DeleteChannelJoi))
+  async delete(@Param() params, @Req() req) {
+    try {
+      return await this.channelService.delete(params.id, req.user)
+    } catch (error) {
+      switch (error.message) {
+        case HttpErrorCode.NOT_FOUND:
+          throw new HttpExceptionCode(
+            HttpStatus.NOT_FOUND,
+            HttpErrorCode.NOT_FOUND,
+            'Channel not found')
           break
 
         case HttpErrorCode.INVALID_PERMISSIONS:

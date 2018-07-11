@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
+  ManyToMany,
+  JoinTable
 } from 'typeorm'
 
 import { Channel } from 'modules/channel/channel.entity'

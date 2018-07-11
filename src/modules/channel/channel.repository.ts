@@ -16,4 +16,10 @@ export class ChannelRepository extends Repository<Channel> {
 
     return this.save(channel)
   }
+
+  async findOneDetailed(id: number) {
+    return await this.findOne({ id }, {
+      relations: ['createdBy', 'users']
+    })
+  }
 }

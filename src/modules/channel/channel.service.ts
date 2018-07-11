@@ -6,7 +6,8 @@ import { ChannelInterface } from './schemas/channel.interface'
 import { ChannelRepository } from './channel.repository'
 import { UserInterface } from 'modules/user/schemas/user.interface'
 import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
-import { pickBy, identity } from 'lodash'
+import { omitBy, isUndefined } from 'lodash'
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class ChannelService {
@@ -18,18 +19,16 @@ export class ChannelService {
     this.channelRepository = getCustomRepository(ChannelRepository)
   }
 
-  async create(channel: ChannelInterface, user: UserInterface) {
-    return await this.channelRepository.createAndSave(channel, user)
+  async create(data: ChannelInterface, user: UserInterface) {
+    return await this.channelRepository.createAndSave(data, user)
   }
 
   async findAll(req): Promise<Channel[]> {
     return await this.channelRepository.find({ createdBy: req.user.id })
   }
 
-  async findOne(id): Promise<Channel> {
-    const channel = await this.channelRepository.findOne({ id }, {
-      relations: ['createdBy', 'users']
-    })
+  async findOne(id: number): Promise<Channel> {
+    const channel = await this.channelRepository.findOneDetailed(id)
 
     if (channel) {
       return channel
@@ -38,20 +37,31 @@ export class ChannelService {
     }
   }
 
-  async update(id, data, user) {
+  async update(id: number, data: ChannelInterface, user: UserInterface) {
     const channel = await this.findOne(id)
 
     try {
       if (channel.createdBy.id === user.id) {
         const newData = {
           ...channel,
-          ...pickBy(data, identity)
+          ...omitBy(data, isUndefined)
         }
 
-        console.log('typeof: ', typeof data.private)
-        console.log('typeof newData: ', typeof newData.private)
-
         return await this.channelRepository.save(newData)
+      } else {
+        throw new Error(HttpErrorCode.INVALID_PERMISSIONS)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async delete(id, user) {
+    const channel = await this.findOne(id)
+
+    try {
+      if (channel.createdBy.id === user.id) {
+        return await this.channelRepository.remove(channel)
       } else {
         throw new Error(HttpErrorCode.INVALID_PERMISSIONS)
       }
