@@ -9,4 +9,5 @@ export class UserInterface {
   readonly createdAt: Date
   readonly updatedAt: Date
   readonly createdChannels: Array<Channel>
+  readonly favoriteChannels: Array<Channel>
 }

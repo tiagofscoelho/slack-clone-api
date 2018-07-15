@@ -14,14 +14,23 @@ export class UserRepository extends Repository<User> {
 
   async createAndSave(data: UserInterface) {
     const user = new User()
+
     user.firstName = data.firstName
     user.lastName = data.lastName
     user.email = data.email
     user.password = await this.passwordManager.generatePasswordHash(data.password)
+    user.favoriteChannels = []
+
     return this.save(user)
   }
 
-  findByEmail(email: string) {
+  findByEmail(email: string, completed: boolean) {
+    if (completed) {
+      return this.findOne({ email }, {
+        relations: ['favoriteChannels']
+      })
+    } else {
       return this.findOne({ email })
+    }
   }
 }

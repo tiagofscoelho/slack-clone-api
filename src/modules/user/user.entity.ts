@@ -42,6 +42,10 @@ export class User {
   @OneToMany(type => Channel, channel => channel.createdBy)
   createdChannels: Channel[]
 
+  @ManyToMany(type => Channel)
+  @JoinTable({ name: 'favorite_channels'})
+  favoriteChannels: Channel[]
+
   @CreateDateColumn({
     type: 'timestamp'
   })

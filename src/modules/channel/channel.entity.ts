@@ -13,6 +13,7 @@ import {
 } from 'typeorm'
 
 import { User } from 'modules/user/user.entity'
+import { UserInterface } from '../user/schemas/user.interface'
 
 @Entity()
 export class Channel {
@@ -37,11 +38,11 @@ export class Channel {
 
   @ManyToOne(type => User, user => user.createdChannels)
   @JoinColumn({ name: 'createdBy' })
-  createdBy: User
+  createdBy: UserInterface
 
   @ManyToMany(type => User)
   @JoinTable({ name: 'channel_users'})
-  users: User[]
+  users: UserInterface[]
 
   @CreateDateColumn({
     type: 'timestamp'

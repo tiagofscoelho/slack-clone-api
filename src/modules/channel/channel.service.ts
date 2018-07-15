@@ -5,16 +5,16 @@ import { Channel } from './channel.entity'
 import { ChannelInterface } from './schemas/channel.interface'
 import { ChannelRepository } from './channel.repository'
 import { UserInterface } from 'modules/user/schemas/user.interface'
+import { UserService } from 'modules/user/user.service'
 import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
-import { omitBy, isUndefined } from 'lodash'
-import { User } from '../user/user.entity';
+import { omitBy, isUndefined, cloneDeep, findIndex } from 'lodash'
 
 @Injectable()
 export class ChannelService {
-
   constructor(
     @InjectRepository(Channel)
-    private readonly channelRepository
+    private readonly channelRepository,
+    private readonly userService: UserService
   ) {
     this.channelRepository = getCustomRepository(ChannelRepository)
   }
@@ -29,6 +29,16 @@ export class ChannelService {
 
   async findOne(id: number): Promise<Channel> {
     const channel = await this.channelRepository.findOneDetailed(id)
+
+    if (channel) {
+      return channel
+    } else {
+      throw new Error(HttpErrorCode.NOT_FOUND)
+    }
+  }
+
+  async findOneWithUser(channeId: number, userId: number) {
+    const channel = await this.channelRepository.findOneWithUser(channeId, userId)
 
     if (channel) {
       return channel
@@ -65,6 +75,29 @@ export class ChannelService {
       } else {
         throw new Error(HttpErrorCode.INVALID_PERMISSIONS)
       }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async favorite(id: number, user: UserInterface) {
+    const channel = await this.findOneWithUser(id, user.id)
+
+    try {
+      const completedUser = await this.userService.getByEmail(user.email, true)
+      const favoriteChannels = cloneDeep(completedUser.favoriteChannels)
+      const favoriteChannelIndex = findIndex(favoriteChannels, element => element.id === id)
+
+      if (favoriteChannelIndex > -1) {
+        favoriteChannels.splice(favoriteChannelIndex, 1)
+      } else {
+        favoriteChannels.unshift(channel)
+      }
+
+      this.userService.saveUser({
+        ...completedUser,
+        favoriteChannels
+      })
     } catch (error) {
       throw error
     }

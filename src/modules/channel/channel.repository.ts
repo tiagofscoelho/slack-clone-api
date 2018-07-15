@@ -22,4 +22,11 @@ export class ChannelRepository extends Repository<Channel> {
       relations: ['createdBy', 'users']
     })
   }
+
+  async findOneWithUser(channelId: number, userId: number) {
+    return await this.createQueryBuilder('channel')
+      .innerJoinAndSelect('channel.users', 'user', 'user.id = :userId', { userId })
+      .where('channel.id = :channelId', { channelId })
+      .getOne()
+  }
 }

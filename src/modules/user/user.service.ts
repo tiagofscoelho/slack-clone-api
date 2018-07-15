@@ -57,8 +57,12 @@ export class UserService {
     }
   }
 
-  async getByEmail(email: string): Promise<UserInterface> {
-    return await this.userRepository.findByEmail(email)
+  async getByEmail(email: string, completed = false): Promise<UserInterface> {
+    return await this.userRepository.findByEmail(email, completed)
+  }
+
+  async saveUser(user: UserInterface): Promise<UserInterface> {
+    return await this.userRepository.save(user)
   }
 
   removeUnecessaryKeysFromUser = user => {
@@ -66,6 +70,7 @@ export class UserService {
       password,
       createdAt,
       updatedAt,
+      favoriteChannels,
       ...cleanUser } = user
 
     return cleanUser

@@ -52,7 +52,7 @@ export class ChannelController {
   @UseGuards(AuthGuard('jwt'))
   async findOne(@Param() params) {
     try {
-      return await this.channelService.findOne(params.id)
+      return await this.channelService.findOne(Number(params.id))
     } catch (error) {
       switch (error.message) {
         case HttpErrorCode.NOT_FOUND:
@@ -73,7 +73,7 @@ export class ChannelController {
   @UsePipes(new JoiValidationPipe(UpdateChannelJoi))
   async update(@Param() params, @Body() body, @Req() req) {
     try {
-      return await this.channelService.update(params.id, body, req.user)
+      return await this.channelService.update(Number(params.id), body, req.user)
     } catch (error) {
       switch (error.message) {
         case HttpErrorCode.NOT_FOUND:
@@ -102,7 +102,7 @@ export class ChannelController {
   @UsePipes(new JoiValidationPipe(DeleteChannelJoi))
   async delete(@Param() params, @Req() req) {
     try {
-      return await this.channelService.delete(params.id, req.user)
+      return await this.channelService.delete(Number(params.id), req.user)
     } catch (error) {
       switch (error.message) {
         case HttpErrorCode.NOT_FOUND:
@@ -118,6 +118,27 @@ export class ChannelController {
               HttpErrorCode.INVALID_PERMISSIONS,
               'Invalid permissions for resource')
             break
+
+        default:
+          throw new InternalServerErrorException()
+      }
+    }
+  }
+
+  @Patch(':id/favorite')
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new JoiValidationPipe(FavoriteChannelJoi))
+  async favorite(@Param() params, @Req() req) {
+    try {
+      return await this.channelService.favorite(Number(params.id), req.user)
+    } catch (error) {
+      switch (error.message) {
+        case HttpErrorCode.NOT_FOUND:
+          throw new HttpExceptionCode(
+            HttpStatus.NOT_FOUND,
+            HttpErrorCode.NOT_FOUND,
+            'Channel not found')
+          break
 
         default:
           throw new InternalServerErrorException()

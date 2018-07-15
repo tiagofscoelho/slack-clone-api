@@ -21,7 +21,6 @@ export class AuthService {
   }
 
   async validateUser({ email }: JwtPayload): Promise<UserInterface>{
-    const user = await this.userService.getByEmail(email)
-    return this.userService.removeUnecessaryKeysFromUser(user)
+    return await this.userService.getByEmail(email)
   }
 }
