@@ -29,4 +29,14 @@ export class ChannelRepository extends Repository<Channel> {
       .where('channel.id = :channelId', { channelId })
       .getOne()
   }
+
+  async findUserChannels(userId: number) {
+    try {
+      return await this.createQueryBuilder('channel')
+        .innerJoinAndSelect('channel.users', 'user', 'user.id = :userId', { userId })
+        .getMany()
+    } catch (error) {
+      throw error
+    }
+  }
 }

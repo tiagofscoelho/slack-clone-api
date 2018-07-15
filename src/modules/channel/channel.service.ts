@@ -7,7 +7,7 @@ import { ChannelRepository } from './channel.repository'
 import { UserInterface } from 'modules/user/schemas/user.interface'
 import { UserService } from 'modules/user/user.service'
 import { HttpErrorCode } from 'utils/enums/http-error-code.enum'
-import { omitBy, isUndefined, cloneDeep, findIndex } from 'lodash'
+import { omitBy, isUndefined, cloneDeep, findIndex, differenceBy } from 'lodash'
 
 @Injectable()
 export class ChannelService {
@@ -23,8 +23,24 @@ export class ChannelService {
     return await this.channelRepository.createAndSave(data, user)
   }
 
-  async findAll(req): Promise<Channel[]> {
-    return await this.channelRepository.find({ createdBy: req.user.id })
+  async findAll(req) {
+    try {
+      let userChannels = await this.channelRepository.findUserChannels(req.user.id)
+      const { favoriteChannels } = await this.userService.getByEmail(req.user.email, true)
+
+      // Remove favorite channels from the list of user channels
+      userChannels = differenceBy(userChannels, favoriteChannels, 'id')
+
+      // Remove users information from user channels
+      userChannels = userChannels.map(({ users, ...attributes}) => attributes)
+
+      return {
+        favorites: favoriteChannels,
+        channels: userChannels
+      }
+    } catch (error) {
+      throw error
+    }
   }
 
   async findOne(id: number): Promise<Channel> {
