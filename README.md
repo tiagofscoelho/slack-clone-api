@@ -66,5 +66,9 @@ $ npm run test:cov
 I am amazed about how easy it was to create the registration/login feature plus the JWT authentication mechanism in 24 hours. I know that it is earlier but I already felt that Nest and TypeORM are awesome. Both have good documentation and are easy to play with.
 
 
+#### 17 December 2018
+This project is in the box for know. I hope to get back to this in 2019. 
+
+
 ## Discussion
 If you would like to discuss something regarding this repo, create a new issue or drop me a line to **tiagofscoelho@gmail.com**.
